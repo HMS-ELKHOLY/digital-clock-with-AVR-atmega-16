@@ -1,0 +1,36 @@
+21:49:52 **** Incremental Build of configuration Debug for project timer00024 ****
+make all 
+Building file: ../h.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"h.d" -MT"h.o" -c -o "h.o" "../h.c"
+In file included from ../h.c:8:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../h.c
+ 
+Building target: timer00024.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,timer00024.map -mmcu=atmega16 -o "timer00024.elf"  ./h.o   
+Finished building target: timer00024.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S timer00024.elf  >"timer00024.lss"
+Finished building: timer00024.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 timer00024.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    6320 bytes (38.6% Full)
+(.text + .data + .bootloader)
+
+Data:         12 bytes (1.2% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+21:49:54 Build Finished. 0 errors, 1 warnings. (took 1s.520ms)
+

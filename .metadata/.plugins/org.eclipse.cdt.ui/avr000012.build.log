@@ -1,0 +1,36 @@
+22:31:05 **** Incremental Build of configuration Debug for project avr000012 ****
+make all 
+Building file: ../clock stop.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"clock stop.d" -MT"clock\ stop.d" -c -o "clock stop.o" "../clock stop.c"
+In file included from ../clock stop.c:8:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../clock stop.c
+ 
+Building target: avr000012.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,avr000012.map -mmcu=atmega16 -o "avr000012.elf"  ./clock\ stop.o   
+Finished building target: avr000012.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S avr000012.elf  >"avr000012.lss"
+Finished building: avr000012.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 avr000012.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    5994 bytes (36.6% Full)
+(.text + .data + .bootloader)
+
+Data:         12 bytes (1.2% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+22:31:07 Build Finished. 0 errors, 1 warnings. (took 1s.420ms)
+

@@ -1,0 +1,31 @@
+#include<avr/io.h>
+#include <util/delay.h>
+
+#define CONTROL_PORT PORTB
+#define CONTROL_REG DDRB
+
+#define hr10 PB0
+#define hr01 PB1
+
+#define min10 PB2
+#define min01 PB3
+
+#define sec10 PB4
+#define sec11 PB5
+
+#define OUTPUT_REG PORTC
+#define OUTPUT_PORT DDRC
+
+void seven_seg_init(){
+	CONTROL_REG=(CONTROL_REG|0x3f);
+	CONTROL_PORT=(CONTROL_REG&~0x3f);
+
+}
+
+int main() {
+	OUTPUT_REG=0;
+	OUTPUT_PORT=0;
+	while (1) {
+
+	}
+}

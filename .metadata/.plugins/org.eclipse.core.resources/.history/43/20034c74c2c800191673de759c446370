@@ -1,0 +1,31 @@
+#include<avr/io.h>
+#include <util/delay.h>
+#define CONTROL_PORT PORTB
+#define CONTROL_REG DDRB
+
+#define hr10 PB0
+#define hr01 PB1
+
+#define min10 PB2
+#define min01 PB3
+
+#define sec10 PB4
+#define sec11 PB5
+
+#define hr01 PB2
+int main() {
+	DDRC = 0xff;
+	PORTC = 0;
+	int i;
+	DDRD = 0xff;
+	PORTC=PORTD=1;
+	while (1) {
+		for (i = 0; i < 10; i++) {
+			PORTC = i;
+
+			PORTD= 1<<i;
+
+			_delay_ms(500);
+		}
+	}
+}

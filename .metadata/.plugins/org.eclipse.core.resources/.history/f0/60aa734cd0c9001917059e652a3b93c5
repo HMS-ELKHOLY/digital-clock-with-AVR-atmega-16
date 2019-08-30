@@ -1,0 +1,3 @@
+clock\ stop.d clock\ stop.o: ../clock\ stop.c ../COMMON_MACROS.h
+
+../COMMON_MACROS.h:

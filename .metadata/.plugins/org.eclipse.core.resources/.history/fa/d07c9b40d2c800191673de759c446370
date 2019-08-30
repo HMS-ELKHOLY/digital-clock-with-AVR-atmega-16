@@ -1,0 +1,49 @@
+#include<avr/io.h>
+#include <util/delay.h>
+
+#define CONTROL_PORT PORTB
+#define CONTROL_REG DDRB
+
+#define hr10 PB0
+#define hr01 PB1
+
+#define min10 PB2
+#define min01 PB3
+
+#define sec10 PB4
+#define sec11 PB5
+
+#define OUTPUT_REG DDRC
+#define OUTPUT_PORT PORTC
+
+#define SET_BIT_MACRO(REG,BIT) ((REG)= REG|(1<<BIT))
+#define CLEAR_BIT_MACRO(REG,BIT) ((REG)= REG&~(1<<BIT))
+
+void seven_seg_init() {
+	CONTROL_REG = (CONTROL_REG | 0x3f);
+	CONTROL_PORT = (CONTROL_REG & ~0x3f);
+
+}
+void seven_seg_set_all_chanels_zero() {
+	CONTROL_PORT = (CONTROL_REG & ~0x3f);
+
+}
+
+unsigned char time_val[6] = { 0,1,2,3,4,5 };
+
+int main() {
+	CONTROL_REG = 0x0f;
+	CONTROL_PORT = 0x02;
+
+	OUTPUT_REG = 0x0f;
+	OUTPUT_PORT = 2;
+	unsigned char counter = 0;
+	while (1) {
+		for (counter = 0; counter < 6; counter++) {
+			OUTPUT_PORT=time_val[counter];
+			SET_BIT_MACRO(CONTROL_PORT,counter);
+			_delay_ms(1000);
+			CONTROL_PORT = (0);
+		}
+	}
+}

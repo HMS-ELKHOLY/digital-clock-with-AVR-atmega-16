@@ -1,0 +1,18 @@
+22:13:31 **** Incremental Build of configuration Debug for project clock stop ****
+make all 
+Building file: ../clock stop.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"clock stop.d" -MT"clock\ stop.d" -c -o "clock stop.o" "../clock stop.c"
+In file included from ../clock stop.c:8:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../clock stop.c
+ 
+Building target: clock stop.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,clock stop.map -mmcu=atmega16 -o "clock stop.elf"  ./clock\ stop.o   
+avr-gcc.exe: stop.map: No such file or directory
+make: *** [clock stop.elf] Error 1
+"make all" terminated with exit code 2. Build might be incomplete.
+
+22:13:31 Build Failed. 1 errors, 1 warnings. (took 771ms)
+

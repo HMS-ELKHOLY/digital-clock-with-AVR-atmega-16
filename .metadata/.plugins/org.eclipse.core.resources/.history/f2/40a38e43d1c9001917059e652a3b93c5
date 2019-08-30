@@ -1,0 +1,103 @@
+/*
+ * clock stop.c
+ *
+ *  Created on: Aug 28, 2019
+ *      Author: koko girgis
+ */
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#include "COMMON_MACROS.h"
+unsigned char S=0 ,M,H,flag1 ;
+
+ISR (INT0_vect){
+	PORTA=0X00;
+}
+ISR(TIMER1_COMPA_vect){
+	cli();
+	flag1=1;
+	sei();
+}
+int main (void){
+	DDRA =0XFF;     // SET PORTA AS OUTPUT PORT
+	PORTA =0X00;   // INITIAL VALUE OF PORTA IS ZERO
+	DDRB =0X7f;       ///SET PORTB AS ONPUT (FOR ENABLE bit) AND BIN NUMBER 7 IN PORTB IS THE INPUT
+	PORTB =0X00;     // INITIAL VALUE OF PORTB IS ZERO
+	// FOR BUTOON
+	cli();
+	MCUCR |=((1<<ISC00)|(1<<ISC01)) ; // WORK WITH RISING EAGE ISC00 AND ISC 01 ARE SET
+	//SIT_BIT(MCUCR,ISC01);
+	//SIT_BIT(GICR,6);
+	GICR |=(1<<6);
+	// END FOR BUTTON
+
+
+	// FOR TIMER 1 16 BIT
+	TCCR1A |=((1<<FOC1A));
+	TCCR1B |= ((1<<WGM12)|(1<<CS11)|(1<<CS10));
+	TIMSK |=(1<<4);
+	TCNT1=0X00;
+	OCR1A=15625;
+	// END FOR TIMER 1
+sei();
+
+
+
+	while (1){
+		if (flag1==1){
+			flag1=0;
+			S++;
+			SET_BIT(PORTB,0);
+			PORTA=S%10;
+			_delay_ms(10);
+
+			CLEAR_BIT(PORTB,0);
+
+			SET_BIT(PORTB,1);
+			PORTA=S/10;
+			_delay_ms(10);
+
+			CLEAR_BIT(PORTB,1);
+			if (S==60){
+				SET_BIT(PORTB,0);
+				SET_BIT(PORTB,1);
+				_delay_ms(10);
+				PORTA=0X00;
+				CLEAR_BIT(PORTB,0);
+				CLEAR_BIT(PORTB,1);
+
+				SET_BIT(PORTB,2);
+				M++;
+				_delay_ms(10);
+				PORTA=M%10;
+				CLEAR_BIT(PORTB,3);
+
+				SET_BIT(PORTB,3);
+				_delay_ms(10);
+				PORTA=M/10;
+				CLEAR_BIT(PORTB,2);
+			}
+			if (M==60){
+				SET_BIT(PORTB,2);
+				SET_BIT(PORTB,3);
+				_delay_ms(10);
+				PORTA=0X00;
+				CLEAR_BIT(PORTB,2);
+				CLEAR_BIT(PORTB,3);
+				_delay_ms(10);
+				H++;
+				SET_BIT(PORTB,4);
+				PORTA=H%10;
+				CLEAR_BIT(PORTB,4);
+
+				SET_BIT(PORTB,5);
+				_delay_ms(10);
+				PORTA=H/10;
+				CLEAR_BIT(PORTB,5);
+			}
+		}
+	}
+
+
+}
+

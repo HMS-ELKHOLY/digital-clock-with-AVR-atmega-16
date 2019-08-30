@@ -1,0 +1,4 @@
+avrdude/avrdudeUseConsole=false
+avrdude/avrdudeconf=C\:\\Program Files (x86)\\AVRDUDESS\\avrdude.conf
+avrdude/customconfigfile=false
+eclipse.preferences.version=1

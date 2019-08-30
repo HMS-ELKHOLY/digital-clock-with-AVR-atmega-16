@@ -1,0 +1,171 @@
+/*
+ * Digital clock shows seconds , minutes and hours with ability to reset or stop the clock
+ *
+ * Date:28/8/2019
+ *
+ * 08:00:00 am
+ *
+ * Author:Hussien Mostafa
+ *
+ *
+ *
+ *
+ *
+ *
+ * */
+
+
+
+
+
+
+
+
+#include<avr/io.h>
+#include <util/delay.h>
+#include<avr/interrupt.h>
+#define CONTROL_PORT PORTB
+#define CONTROL_REG DDRB
+
+#define hr10 PB0
+#define hr01 PB1
+
+#define min10 PB2
+#define min01 PB3
+
+#define sec10 PB4
+#define sec11 PB5
+
+#define OUTPUT_REG DDRC
+#define OUTPUT_PORT PORTC
+
+#define MAKE_CONTROL_PORT_ZERO CONTROL_PORT = (CONTROL_REG & ~0x3f)
+
+#define SET_BIT_MACRO(REG,BIT) ((REG)= REG|(1<<BIT))
+#define CLEAR_BIT_MACRO(REG,BIT) ((REG)= REG&~(1<<BIT))
+
+
+/*volatile unsigned char time_val[6] = { 0 };*/
+volatile unsigned char time_val[3] = { 0 };
+volatile unsigned char reset_flag=0;
+volatile unsigned char stop_flag=0;
+void seven_seg_init() {
+	/* control pins are from 0 to 5*/
+	CONTROL_REG = (CONTROL_REG | 0x3f);
+	CONTROL_PORT = (CONTROL_REG & ~0x3f);
+
+}
+
+
+//15625
+void timer1_init_ctc(unsigned int top) {
+	cli();
+	TCNT1 = 0;
+	OCR1A = top;
+	TCCR1A = 0;
+	SET_BIT_MACRO(TCCR1A, FOC1A);
+	SET_BIT_MACRO(TCCR1B, WGM12);
+	SET_BIT_MACRO(TCCR1B, CS11);
+	SET_BIT_MACRO(TCCR1B, CS10);
+	SET_BIT_MACRO(TIMSK, OCIE1A);
+	sei();
+}
+ISR (TIMER1_COMPA_vect) {
+	cli();
+	if(reset_flag==1)
+		time_val[0]=time_val[1]=time_val[2]=0;
+	else if (stop_flag!=1)
+	/*if (time_val[0] < 9&&time_val[1] < 6) {
+		time_val[0]++;
+	} else if (time_val[1] < 6) {
+		time_val[0] = 0;
+		time_val[1]++;
+	} else if (time_val[2] < 9&&time_val[3] < 6) {
+		time_val[1] = 0;
+		time_val[2]++;
+	} else if (time_val[3] < 6) {
+		time_val[2] = 0;
+		time_val[3]++;
+	} else if (time_val[4] < 9&&time_val[5] < 6) {
+		time_val[3] = 0;
+		time_val[4]++;
+	}
+	else if (time_val[5] < 6) {
+			time_val[4] = 0;
+			time_val[5]++;
+		}
+*/
+time_val[0]++;
+if(time_val[0]==60)
+	{
+	time_val[1]++;
+	time_val[0]=0;
+	}
+if(time_val[1]==60)
+{
+		time_val[2]++;
+		time_val[1]=0;
+}
+
+if(time_val[2]==60)
+{
+		time_val[0]=0;
+		time_val[1]=time_val[2]=0;
+}
+
+	sei();
+}
+void INT0_INIT_PULL_UP(){
+	CLEAR_BIT_MACRO(DDRD,PD2);
+	SET_BIT_MACRO(PORTD,PD2);
+	cli();
+	MCUCR|=(1<<ISC01);
+	GICR|=(1<<INT0);
+	sei();
+}
+void INT1_INIT_PULL_UP(){
+	CLEAR_BIT_MACRO(DDRD,PD3);
+	SET_BIT_MACRO(PORTD,PD3);
+	cli();
+	MCUCR|=(1<<ISC11);
+	GICR|=(1<<INT1);
+	sei();
+}
+ISR(INT0_vect){
+	reset_flag^=1;
+}
+ISR(INT1_vect){
+	stop_flag^=1;
+}
+
+int main() {
+	CONTROL_REG = 0x3f;
+	CONTROL_PORT = 0x00;
+	DDRD = 0xff;
+	OUTPUT_REG = 0x3f;
+	OUTPUT_PORT = 0;
+	unsigned char counter = 0;
+	INT0_INIT_PULL_UP();
+ 	INT1_INIT_PULL_UP();
+	timer1_init_ctc(15625);
+	while (1) {
+		for (counter = 0; counter <= 4; counter+=2) {
+			/*each time will show the number of seconds then minutes then hours
+			 * example :
+			 * 1         5        :      5      0       :      1       7
+			 * 									             <tens     ones>  ____>shown in the first of loop : counter=0
+			 * 				          <tens     ones>  ____>shown in the second iteration of loop : counter=2
+			 * <tens     ones>  ____>shown in the second iteration of loop : counter=4
+			 * */
+			OUTPUT_PORT = time_val[counter/2]%10;//ones place
+			SET_BIT_MACRO(CONTROL_PORT,counter);
+			_delay_ms(5);
+			MAKE_CONTROL_PORT_ZERO;
+			OUTPUT_PORT = time_val[counter/2]/10;//tens place
+			SET_BIT_MACRO(CONTROL_PORT,(counter+1));
+			_delay_ms(5);
+			MAKE_CONTROL_PORT_ZERO;
+		}
+		CONTROL_PORT = 0;
+	}
+}

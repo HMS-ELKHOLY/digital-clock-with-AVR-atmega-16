@@ -1,0 +1,18 @@
+#include<avr/io.h>
+#include <util/delay.h>
+int main() {
+	DDRC = 0xff;
+	PORTC = 0;
+	int i;
+	DDRD = 0xff;
+	while (1) {
+		for (i = 0; i < 10; i++) {
+			PORTC = i;
+			if(i<5)
+			PORTD= (1<<i);
+			else
+				PORTD=0;
+			_delay_ms(500);
+		}
+	}
+}

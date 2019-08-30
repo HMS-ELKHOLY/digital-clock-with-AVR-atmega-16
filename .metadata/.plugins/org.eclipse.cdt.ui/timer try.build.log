@@ -1,0 +1,18 @@
+21:33:57 **** Build of configuration Debug for project timer try ****
+make all 
+Building file: ../j.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"j.d" -MT"j.o" -c -o "j.o" "../j.c"
+In file included from ../j.c:8:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../j.c
+ 
+Building target: timer try.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,timer try.map -mmcu=atmega16 -o "timer try.elf"  ./j.o   
+avr-gcc.exe: try.map: No such file or directory
+make: *** [timer try.elf] Error 1
+"make all" terminated with exit code 2. Build might be incomplete.
+
+21:33:58 Build Failed. 1 errors, 1 warnings. (took 719ms)
+
